@@ -134,15 +134,14 @@ void CNKeccak(uint64_t *output, uint64_t *input, uint32_t Length)
 
 static inline uint64_t mul128(uint64_t a, uint64_t b, uint64_t* product_hi)
 {
-	uint64_t lo, hi;
+	__uint128_t x, y, out;
 	
-	__asm__("mul %%rdx":
-	"=a" (lo), "=d" (hi):
-	"a" (a), "d" (b));
+	x = a;
+	y = b;
+	out = x * y;
 	
-	*product_hi = hi;
-	
-	return lo;
+	*product_hi = (uint64_t)(out >> 64);
+	return((uint64_t)out);
 }
 
 #define BYTE(x, y)		(((x) >> ((y) << 3)) & 0xFF)
